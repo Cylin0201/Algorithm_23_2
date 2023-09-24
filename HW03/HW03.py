@@ -39,6 +39,7 @@ def Merge1(left, right):
 
     return result, merge_space
 
+#Merge_Sort2 저장공간: n 
 def MergeSort2(arr, low, high):
     if low < high:
         mid = (low + high) // 2
