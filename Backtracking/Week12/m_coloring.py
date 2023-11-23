@@ -11,12 +11,11 @@ def color(i, vcolor, graph, m):
         else:
             for c in range(1, m + 1):
                 vcolor[i + 1] = c
-                color(i + 1, vcolor, graph, m)
-                vcolor[i + 1] = 0
+                color(i + 1, vcolor, graph, m)  
 
-n = 4
+n = 2
 W = [[0, 1, 1, 1], [1, 0, 1, 0], [1, 1, 0, 1], [1, 0, 1, 0]]
 vcolor = [0] * n
-m = 3
+m = 4
 
 color(-1, vcolor, W, m)
