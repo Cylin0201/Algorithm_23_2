@@ -1,72 +1,55 @@
-import queue
+from queue import PriorityQueue
 
 class Node:
-    def __init__(self, level, weight, profit, bound, include):
+    def __init__ (self, level, profit, weight):
         self.level = level
-        self.weight = weight
         self.profit = profit
-        self.bound = bound
-        self.include = include
-
-def kp_Best_FS():
-    global maxProfit
-    global bestset
-    temp = n * [0]
-    v = Node(-1, 0, 0, 0.0, temp)
-    q = queue.PriorityQueue()
-
-    q.put((-v.bound, v))
-
-    while not q.empty():
-        u = q.get()[1]
-
-        if u.bound > maxProfit:
-            v.level = u.level + 1
-            v.weight = u.weight + w[v.level]
-            v.profit = u.profit + p[v.level]
-            v.bound = compBound(v)
-            v.include = u.include + [1]
-
-            if v.weight <= W and v.profit > maxProfit:
-                maxProfit = v.profit
-                bestset = v.include
-
-            if v.bound > maxProfit:
-                q.put((-v.bound, v))
-
-        v = Node(u.level + 1, u.weight, u.profit, u.bound, u.include + [0])
-        v.bound = compBound(v)
-
-        if v.bound > maxProfit:
-            q.put((-v.bound, v))
-
-def compBound(u):
-    if u.weight >= W:
+        self.weight = weight
+        self.bound = 0        
+def bound(u, p, w):
+    n = len(p) - 1
+    if (u.weight >= W):
         return 0
+    else:
+        result = u.profit
+        j = u.level + 1
+        totweight = u.weight
+        while (j <= n and totweight + w[j] <= W):
+            totweight += w[j]
+            result += p[j]
+            j += 1
+        k = j
+        if (k <= n):
+            result += (W - totweight) * p[k] / w[k]
+        return result
 
-    totalWeight = u.weight
-    totalProfit = u.profit
-    j = u.level + 1
+def knapsack4 (p, w, W):
+    PQ = PriorityQueue()
+    v = Node(0, 0, 0)
+    maxprofit = 0
+    v.bound = bound(v, p, w)
+    PQ.put((-v.bound, v))
+    while (not PQ.empty()):
+        v = PQ.get()[1]
+        if (v.bound > maxprofit):
+            level = v.level + 1
+            weight = v.weight + w[level]
+            profit = v.profit + p[level]
+            u = Node(level, profit, weight)
+            if (u.weight <= W and u.profit > maxprofit):
+                maxprofit = u.profit
+            u.bound = bound(u, p, w)
+            if (u.bound > maxprofit):
+                PQ.put((-u.bound, u))
+            u = Node(level, v.profit, v.weight)
+            u.bound = bound(u, p, w)
+            if (u.bound > maxprofit):
+                PQ.put((-u.bound, u))
+    return maxprofit
 
-    while j < n and totalWeight + w[j] <= W:
-        totalWeight += w[j]
-        totalProfit += p[j]
-        j += 1
-
-    if j < n:
-        totalProfit += (W - totalWeight) * (p[j] / w[j])
-
-    return totalProfit
-
-n = 4
+profit = [0, 40, 30, 50, 10]
+weight = [0, 2, 5, 10, 5]
 W = 16
-p = [40, 30, 50, 10]
-w = [2, 5, 10, 5]
-include = [0] * n
-maxProfit = 0
-bestset = n * [0]
 
-kp_Best_FS()
-print(bestset)
-print(maxProfit)
-    
+maxprofit = knapsack4(profit, weight, W)
+print('maxprofit =', maxprofit)
