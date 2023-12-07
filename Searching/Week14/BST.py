@@ -7,7 +7,7 @@ class Node:
 
 def bin_search_tree_insert(root, node):
     if (root is None):
-         return node
+        root = node
     else:
         if (root.data > node.data):
             root.l_child = bin_search_tree_insert(root.l_child, node)

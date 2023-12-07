@@ -1,4 +1,3 @@
-import math
 def interpolationSearch(S, x):
     low = 0
     high = len(S) - 1
